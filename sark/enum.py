@@ -1,19 +1,19 @@
-import idaapi
+import idaapi # type: ignore
 from . import exceptions
 from contextlib import suppress
-
+import ida_typeinf
 DEFMASK = idaapi.BADADDR
 
 ENUM_ERROR_MAP = {
-    idaapi.ENUM_MEMBER_ERROR_NAME:
+    ida_typeinf.TERR_DUPNAME:
         (exceptions.SarkErrorEnumMemberName, "already have member with this name (bad name)"),
-    idaapi.ENUM_MEMBER_ERROR_VALUE:
+    ida_typeinf.TERR_BAD_SERIAL:
         (exceptions.SarkErrorEnumMemberValue, "already have 256 members with this value"),
-    idaapi.ENUM_MEMBER_ERROR_ENUM:
+    ida_typeinf.TERR_BAD_ARG:
         (exceptions.SarkErrorEnumMemberEnum, "bad enum id"),
-    idaapi.ENUM_MEMBER_ERROR_MASK:
+    ida_typeinf.TERR_BAD_BMASK:
         (exceptions.SarkErrorEnumMemberMask, "bad bmask"),
-    idaapi.ENUM_MEMBER_ERROR_ILLV:
+    ida_typeinf.TERR_BAD_MSKVAL:
         (exceptions.SarkErrorEnumMemberIllv, "bad bmask and value combination (~bmask & value != 0)"),
 }
 

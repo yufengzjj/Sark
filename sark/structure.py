@@ -1,6 +1,6 @@
 from collections import namedtuple, defaultdict
 import operator
-
+import ida_typeinf
 import idaapi
 import idautils
 import idc
@@ -14,19 +14,17 @@ FF_SIZES = [1, 2, 4, 8, 16, ]
 SIZE_TO_TYPE = dict(zip(FF_SIZES, FF_TYPES))
 
 STRUCT_ERROR_MAP = {
-    idc.STRUC_ERROR_MEMBER_NAME:
+    ida_typeinf.TERR_DUPNAME:
         (exceptions.SarkErrorStructMemberName, "already has member with this name (bad name)"),
-    idc.STRUC_ERROR_MEMBER_OFFSET:
+    ida_typeinf.TERR_BAD_OFFSET:
         (exceptions.SarkErrorStructMemberOffset, "already has member at this offset"),
-    idc.STRUC_ERROR_MEMBER_SIZE:
+    ida_typeinf.TERR_BAD_SIZE:
         (exceptions.SarkErrorStructMemberSize, "bad number of bytes or bad sizeof(type)"),
-    idc.STRUC_ERROR_MEMBER_TINFO:
+    ida_typeinf.TERR_BAD_ARG:
         (exceptions.SarkErrorStructMemberTinfo, "bad typeid parameter"),
-    idc.STRUC_ERROR_MEMBER_STRUCT:
-        (exceptions.SarkErrorStructMemberStruct, "bad struct id (the 1st argument)"),
-    idc.STRUC_ERROR_MEMBER_UNIVAR:
+    ida_typeinf.TERR_BAD_UNIVAR:
         (exceptions.SarkErrorStructMemberUnivar, "unions can't have variable sized members"),
-    idc.STRUC_ERROR_MEMBER_VARLAST:
+    ida_typeinf.TERR_BAD_VARLAST:
         (exceptions.SarkErrorStructMemberVarlast, "variable sized member should be the last member in the structure"),
 }
 
@@ -45,7 +43,7 @@ def struct_member_error(err, sid, name, offset, size):
         A ``SarkErrorAddStructMemeberFailed`` derivative exception, with an
         informative message.
     """
-    exception, msg = STRUCT_ERROR_MAP[err]
+    exception, msg = STRUCT_ER·ROR_MAP[err]
     struct_name = idaapi.get_struc_name(sid)
     return exception(('AddStructMember(struct="{}", member="{}", offset={}, size={}) '
                       'failed: {}').format(
